@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.graphi.Controller">
+    <fx:define>
+        <ToggleGroup fx:id="algorithmToggleGroup"/>
+    </fx:define>
+    <top>
+        <AnchorPane style="-fx-background-color: gainsboro">
+                <GridPane AnchorPane.leftAnchor="10" AnchorPane.topAnchor="0" alignment="CENTER_LEFT" hgap="70"
+                          prefHeight="40">
+                    <HBox spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <TextField fx:id="textHeight" prefWidth="60" promptText="Height"/>
+                        <TextField fx:id="textWidth" prefWidth="60" promptText="Width"/>
+                        <TextField fx:id="textMin" prefWidth="40" promptText="Min"/>
+                        <TextField fx:id="textMax" prefWidth="40" promptText="Max"/>
+                        <Button text="Generate" onAction="#onGenerateClick"/>
+                    </HBox>
+                    <HBox spacing="30" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <RadioButton fx:id="bfs" text="BFS" toggleGroup="$algorithmToggleGroup"/>
+                        <RadioButton fx:id="dijkstra" text="Dijkstra" toggleGroup="$algorithmToggleGroup"/>
+                    </HBox>
+                    <HBox spacing ="15" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <Button text="Load"/>
+                        <Button text="Save" onAction="#saveButtonClick"/>
+                    </HBox>
+                </GridPane>
+        </AnchorPane>
+    </top>
+
+    <center>
+        <AnchorPane fx:id="anchorPane">
+        </AnchorPane>
+    </center>
+
+    <bottom>
+        <AnchorPane prefHeight="40" style="-fx-background-color: gainsboro">
+            <padding>
+                <Insets bottom="20"/>
+            </padding>
+            <GridPane>
+                <padding>
+                    <Insets left="20" right="20" top="20"/>
+                </padding>
+                <TextField fx:id="programResponse" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"
+                           promptText="Program response" editable="false"/>
+                <Label fx:id="gradientMin" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="LEFT"/>
+                <Label fx:id="gradientMax" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="RIGHT"/>
+                <Rectangle height="20" width="660"  GridPane.rowIndex="2" GridPane.columnIndex="0"
+                           GridPane.columnSpan="2">
+                    <fill>
+                        <LinearGradient cycleMethod="NO_CYCLE">
+                            <stops>
+                                <Stop>
+                                    <color>
+                                        <Color red="0.165" blue="1"/>
+                                    </color>
+                                </Stop>
+                                <Stop offset="0.25">
+                                    <color>
+                                        <Color blue="1" green="0.867"/>
+                                    </color>
+                                </Stop>
+                                <Stop offset="0.5">
+                                    <color>
+                                        <Color green="1" blue="0.082"/>
+                                    </color>
+                                </Stop>
+                                <Stop offset="0.75">
+                                    <color >
+                                        <Color red="0.949" green="1"/>
+                                    </color>
+                                </Stop>
+                                <Stop offset="1.0">
+                                    <color>
+                                        <Color red="1"/>
+                                    </color>
+                                </Stop>
+                            </stops>
+                        </LinearGradient>
+                    </fill>
+                </Rectangle>
+            </GridPane>
+        </AnchorPane>
+    </bottom>
+</BorderPane>
