@@ -60,6 +60,6 @@ public class GraphSaver {
         }
 
 
-        return new InfoLabel("Graph successfully saved to '" + outputFileName + "'.", InfoLabelSource.SAVE, false);
+        return new InfoLabel("Graf zapisany do '" + outputFileName + "'.", InfoLabelSource.SAVE, false);
     }
 }
