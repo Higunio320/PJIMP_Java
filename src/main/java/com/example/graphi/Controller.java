@@ -96,7 +96,7 @@ public class Controller {
         }
         gradientMin.setText(minString);
         gradientMax.setText(maxString);
-        this.graph = Generator.generate(height, width, min, max);
+        this.graph = IGenerator.generate(height, width, min, max);
         generateNodes(width*height, scaledLength);
         IGraphDrawer graphDrawer = new GraphDrawer(this.nodes, this.graph);
         graphDrawer.drawGraph(min, max, scaledLength);

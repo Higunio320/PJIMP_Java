@@ -72,7 +72,6 @@ public class Dijkstra implements IShortestPathAlgorithm {
             }
             if(index == 0) {
                 if(queue.get(0) != nodeNumber) {
-                    System.out.println("Coś poszło nie tak");
                     return;
                 }
             }
@@ -140,13 +139,6 @@ public class Dijkstra implements IShortestPathAlgorithm {
 
     public double getDistance(int nodeNumber) {
         return distances[nodeNumber];
-    }
-
-    public void printDijkstra() {
-        int nodeCount = distances.length;
-        for(int i = 0; i < nodeCount; i++) {
-            System.out.println("Odleglosc wierzcholka " + i + " wynosi: " + distances[i]);
-        }
     }
 
     @Override

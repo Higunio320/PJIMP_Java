@@ -72,7 +72,6 @@ public class Bfs implements IGraphTraversalAlgorithm {
             }
             if(index == 0) {
                 if(queue.get(0) != nodeNumber) {
-                    System.out.println("Coś poszło nie tak");
                     return;
                 }
             }

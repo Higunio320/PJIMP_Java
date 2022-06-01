@@ -6,5 +6,5 @@ public interface IShortestPathAlgorithm {
 
     void calculate(int start);           // function that calculates every node's distance from root
     double getDistance(int nodeNumber); // returns distance from root of node with number nodeNumber;
-    double getMaxDistance();
+    double getMaxDistance();            // function that returns max distance from starting node to another node
 }
