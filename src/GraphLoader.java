@@ -1,34 +1,34 @@
-//package pl.jimp.pathfinder;
+package com.example.graphi;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class GraphLoader {
-    private String inputFileName;
+    private File file;
 
     private int width;
     private int height;
-    private Graph graph;
+    private IGraph graph;
+    private double minValue;
+    private double maxValue;
 
 
-    public GraphLoader(String inputFileName) {
-        this.inputFileName = inputFileName;
+    public GraphLoader(File file) {
+        this.file = file;
     }
 
 
-    public InfoLabel loadGraph() {
-        String inputFilePath = "src/main/resources/pl/jimp/data/" + inputFileName;
-        File inputFile = new File(inputFilePath);
+    public boolean loadGraph() {
 
         Scanner scanner = null;
         Scanner lineNumberScanner = null;
 
         try {
-            scanner = new Scanner(inputFile);
-            lineNumberScanner = new Scanner(inputFile);
+            scanner = new Scanner(file);
+            lineNumberScanner = new Scanner(file);
         } catch (FileNotFoundException e) {
-            return new InfoLabel("Nie mozna zaladowac grafu z  '" + inputFileName + " Plik nie znaleziony. ", InfoLabelSource.LOAD, true);
+            return false;
         }
 
         lineNumberScanner.nextLine();
@@ -36,62 +36,67 @@ public class GraphLoader {
         if (scanner.hasNextInt()) {
             height = scanner.nextInt();
         } else {
-            return new InfoLabel("Bledny format danych, nie mozna zaladowac ilosci wierszy.", InfoLabelSource.LOAD, true);
+            return false;
         }
         if (scanner.hasNextInt()) {
             width = scanner.nextInt();
         } else {
-            return new InfoLabel("Bledny format danych, nie mozna zaladowac ilosci kolumn.", InfoLabelSource.LOAD, true);
+            return false;
         }
 
-        graph = new Graph(width, height);
+        graph = new Graph(height, width);
 
         int vertexNum = 0;
+        int lineCounter = 0;
+        minValue = Double.MAX_VALUE;
+        maxValue = 0.0;
 
         while (lineNumberScanner.hasNextLine()) {
 
+            graph.addNode(new Node(lineCounter));
             String currentLine = lineNumberScanner.nextLine();
             scanner = new Scanner(currentLine);
 
             while (scanner.hasNextInt()) {
                 int checkedVertex = scanner.nextInt();
                 double weightValue;
-                String weightString;
-
-                weightString = scanner.next();
+                String weightString = scanner.next();
 
                 if (weightString.charAt(0) != ':') {
-                    return new InfoLabel("Bledny format danych, brak separatora ':'." + inputFileName +"' line no: " + (vertexNum+2),
-                            InfoLabelSource.LOAD, true);
+                    return false;
                 }
-                weightValue = Double.parseDouble(weightString.substring(1, weightString.length()));
+                try {
+                    weightValue = Double.parseDouble(weightString.substring(1, weightString.length()));
+                } catch (Exception e) {
+                    return false;
+                }
+               graph.getNode(lineCounter).addConnection(checkedVertex, weightValue);
 
-                if (checkedVertex == (vertexNum - height)) {
-                    graph.getNodeNumber().get(vertexNum).addConnection(0, weightValue);
-                }
-                if (checkedVertex == (vertexNum + height)) {
-                    graph.getNodeNumber().get(vertexNum).addConnection(1, weightValue);
-                }
-                if (checkedVertex == (vertexNum + 1)) {
-                    graph.getNodeNumber().get(vertexNum).addConnection(2, weightValue);
-                }
-                if (checkedVertex == (vertexNum - 1)) {
-                    graph.getNodeNumber().get(vertexNum).addConnection(3, weightValue);
-                }
-
-
+                if(weightValue < minValue)
+                    minValue = weightValue;
+                if(weightValue > maxValue)
+                    maxValue = weightValue;
             }
             vertexNum++;
+            lineCounter++;
 
         }
 
         scanner.close();
         lineNumberScanner.close();
 
-        return new InfoLabel("Zaladowano graf z  " + inputFileName, InfoLabelSource.LOAD, false);
+        return true;
     }
 
-    public Graph getGraph() {
+    public IGraph getGraph() {
         return graph;
+    }
+
+    public double getMaxValue() {
+        return maxValue;
+    }
+
+    public double getMinValue() {
+        return minValue;
     }
 }
