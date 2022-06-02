@@ -61,4 +61,6 @@ public class Node implements INode {
     public void setPredecessor(int predecessor) {
         this.predecessor = predecessor;
     }
+
+
 }

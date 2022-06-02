@@ -28,7 +28,7 @@
                         <RadioButton fx:id="dijkstra" text="Dijkstra" toggleGroup="$algorithmToggleGroup"/>
                     </HBox>
                     <HBox spacing ="15" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                        <Button text="Load"/>
+                        <Button text="Load" onAction="#onLoadClick"/>
                         <Button text="Save" onAction="#saveButtonClick"/>
                     </HBox>
                 </GridPane>

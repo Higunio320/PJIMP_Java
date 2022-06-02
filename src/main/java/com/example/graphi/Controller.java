@@ -10,6 +10,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+import java.io.File;
 
 public class Controller {
 
@@ -18,6 +22,7 @@ public class Controller {
     private IShortestPathAlgorithm dijkstraAlgorithm;
     private IGraphTraversalAlgorithm bfsAlgorithm;
     private IGraph graph;
+    private final FileChooser fileChooser = new FileChooser();
 
     @FXML
     private AnchorPane anchorPane;
@@ -56,6 +61,7 @@ public class Controller {
         textWidth.setFocusTraversable(false);
         textMin.setFocusTraversable(false);
         textMax.setFocusTraversable(false);
+        fileChooser.setInitialDirectory(new File("."));
     }
 
     @FXML
@@ -96,7 +102,7 @@ public class Controller {
         }
         gradientMin.setText(minString);
         gradientMax.setText(maxString);
-        this.graph = Generator.generate(height, width, min, max);
+        this.graph = IGenerator.generate(height, width, min, max);
         generateNodes(width*height, scaledLength);
         IGraphDrawer graphDrawer = new GraphDrawer(this.nodes, this.graph);
         graphDrawer.drawGraph(min, max, scaledLength);
@@ -120,6 +126,8 @@ public class Controller {
         boolean dot = false;
         for (int i = 0; i < string.length(); i++) {
             if (!Character.isDigit(string.charAt(i))) {
+                if(string.charAt(i) != '.')
+                    return false;
                 if(dot) {
                     return false;
                 } else {
@@ -203,31 +211,50 @@ public class Controller {
 
     @FXML
     public void saveButtonClick() {
-//        try {
-////            int nodeNumber = graph.getWidth()*graph.getHeight();
-////            File f = new File("test.txt");
-////            FileOutputStream fos = new FileOutputStream(f);
-////            PrintWriter pw = new PrintWriter(fos);
-////            String string = "";
-////            string += "\t" + graph.getHeight() + "\t" + graph.getWidth();
-////            pw.write(string);
-////            string = "";
-////            INode node;
-////            for(int i = 0; i < nodeNumber; i++) {
-////                string += "\n";
-////                node = graph.getNode(i);
-////                for(int j = 0; j < node.getConnectionsAmount(); j++) {
-////                    string += "\t\t" + node.getConnectedNode(j) + " :" + node.getConnectionWeight(j);
-////                }
-////                pw.write(string);
-////                string = "";
-////            }
-////            pw.flush();
-////            fos.close();
-////            pw.close();
-////        } catch (IOException ex) {
-////            ex.printStackTrace();
-////        }
+        programResponse.setText("");
+        GraphSaver saver;
+        File file = fileChooser.showSaveDialog(new Stage());
+        if(file != null) {
+            saver = new GraphSaver(this.graph, file);
+            if(saver.saveGraph()) {
+                programResponse.setText("Graph has been saved to " + file.getAbsolutePath());
+            } else {
+                programResponse.setText("An error occurred while saving graph");
+            }
+        }
+    }
+
+    @FXML
+    public void onLoadClick() {
+        programResponse.setText("");
+        anchorPane.getChildren().clear();
+        GraphLoader loader;
+        File file = fileChooser.showOpenDialog(new Stage());
+        if(file != null) {
+            loader = new GraphLoader(file);
+            if (loader.loadGraph()) {
+                this.graph = loader.getGraph();
+                int height = graph.getHeight();
+                int width = graph.getWidth();
+                double scaledLength;
+                if (width > height) {
+                    scaledLength = (double) 275 / (2 * width - 1);
+                } else {
+                    scaledLength = (double) 275 / (2 * height - 1);
+                }
+                generateNodes(height * width, scaledLength);
+                IGraphDrawer graphDrawer = new GraphDrawer(this.nodes, this.graph);
+                graphDrawer.drawGraph(loader.getMinValue(), loader.getMaxValue(), scaledLength);
+                graphDrawer.getNodeGroup().getChildren().addAll(graphDrawer.getEdgeGroup());
+                graphDrawer.getEdgeGroup().toBack();
+                anchorPane.getChildren().add(graphDrawer.getNodeGroup());
+                gradientMin.setText(String.format("%.2f", loader.getMinValue()));
+                gradientMax.setText(String.format("%.2f", loader.getMaxValue()));
+                programResponse.setText("Graph " + graph.getHeight() + "x" + graph.getWidth() + " has been loaded");
+            } else {
+                programResponse.setText("An error occurred while loading graph");
+            }
+        }
     }
 
     private void generateNodes(int nodeNumber, double scaledLength) {
@@ -251,4 +278,5 @@ public class Controller {
             });
         }
     }
+
 }
