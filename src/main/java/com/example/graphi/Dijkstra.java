@@ -145,4 +145,6 @@ public class Dijkstra implements IShortestPathAlgorithm {
     public double getMaxDistance() {
         return maxDistance;
     }
+
+
 }

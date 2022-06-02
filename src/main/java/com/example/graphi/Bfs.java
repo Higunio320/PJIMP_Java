@@ -151,4 +151,6 @@ public class Bfs implements IGraphTraversalAlgorithm {
     public double getDistance(int nodeNumber) {
         return distances[nodeNumber];
     }
+
+
 }
